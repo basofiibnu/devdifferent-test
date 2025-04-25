@@ -1,10 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# 🗺️ Devdifferent - Map Task
 
-First, run the development server:
+A full-stack property management app built with [Next.js](https://nextjs.org), Supabase, and Google Maps API. This app enables users to create, view, filter, and manage property listings on an interactive map, with built-in authentication and image upload support.
+
+---
+
+## 🚀 Features
+
+### 🔐 Authentication
+- Email/password login
+- Google OAuth login
+- Signup via email and password
+
+### 🏡 Property Management
+- Add, update, and delete property listings
+- Property fields: price, latitude, longitude, image
+- Image upload via file input or image URL
+
+### 🔍 Filtering & Search
+- Filter properties by price
+- Debounced input to reduce API calls
+
+### 🗺️ Google Maps Integration
+- Display properties as markers
+- Clickable markers show property details
+- Fully interactive map
+
+### 🌙 Dark Mode
+- Toggle between light and dark themes
+- User preference saved in `localStorage`
+
+### 🛠️ Supabase Integration
+- Authentication & session management
+- Image upload via Supabase Storage
+- Property data stored in Supabase PostgreSQL
+- Row-Level Security (RLS) for data protection
+
+### ⚙️ State Management
+- SWR for efficient data fetching & caching
+- Context API for global state (`PropertiesContext`)
+
+---
+
+## 🧑‍💻 Getting Started
+
+First, install dependencies and run the development server:
 
 ```bash
+npm install
 npm run dev
 # or
 yarn dev
@@ -14,23 +57,56 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then, open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+You can start editing the app by modifying `src/app/page.tsx`. The page auto-updates as you make changes.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🧪 Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+Create a `.env.local` file in your root directory and add the following:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
+NEXT_PUBLIC_BASE_PROD_URL=your-production-url
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🗂️ Folder Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/
+├── app/                 # Next.js routing (App Router)
+│   ├── auth/            # Signin, signup, callback pages
+│   └── dashboard/       # Main dashboard with map and properties
+├── components/          # Reusable UI components (Header, Map, etc.)
+├── context/             # Global state (e.g. PropertiesContext)
+├── lib/                 # Utility functions (e.g. supabase client)
+├── types/               # TypeScript types (e.g. TProperty)
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📚 Learn More
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Learn Next.js (Interactive)](https://nextjs.org/learn)
+- [Supabase Docs](https://supabase.com/docs)
+- [Google Maps Platform Docs](https://developers.google.com/maps)
+
+---
+
+## ▲ Deployment
+
+Deploy effortlessly on [Vercel](https://vercel.com):
+
+```bash
+# Push your code to GitHub, then:
+vercel deploy
+```
+
+Refer to the [Next.js deployment guide](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
