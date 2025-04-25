@@ -22,7 +22,10 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${location.origin}/auth/callback`,
+        redirectTo:
+          process.env.NODE_ENV === 'production'
+            ? `${process.env.NEXT_PUBLIC_BASE_PROD_URL}/auth/callback`
+            : `${location.origin}/auth/callback`,
       },
     });
     if (error) return alert('Google login error: ' + error.message);

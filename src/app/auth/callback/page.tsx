@@ -13,16 +13,11 @@ export default function AuthCallbackPage() {
         await supabase.auth.getSession();
 
       if (error || !sessionData.session) {
-        console.error(
-          'Session fetch error or user canceled login:',
-          error
-        );
         alert('Login canceled or failed. Please try again.');
         router.push('/auth/signin');
         return;
       }
 
-      console.log(sessionData, 'session in auth callback page');
       const user = sessionData.session.user;
 
       const { data: existing, error: existingError } = await supabase
