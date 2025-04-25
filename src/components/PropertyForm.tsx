@@ -78,8 +78,11 @@ export default function PropertyForm({
 
       setValue('image_url', data.url); // Set the image URL in the form
       alert('Image uploaded successfully!');
-    } catch (error: any) {
-      console.error('Error uploading file:', error.message);
+    } catch (error: unknown) {
+      console.error(
+        'Error uploading file:',
+        (error as Error).message
+      );
       alert('Failed to upload image');
     } finally {
       setUploading(false);

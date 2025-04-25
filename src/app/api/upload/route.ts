@@ -44,11 +44,19 @@ export async function POST(req: Request) {
       { url: storageData.publicUrl },
       { status: 200 }
     );
-  } catch (error: any) {
-    console.error('Error uploading file:', error.message);
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Error uploading file:', error.message);
+      return NextResponse.json(
+        { error: error.message },
+        { status: 500 }
+      );
+    } else {
+      console.error('Error uploading file:', error);
+      return NextResponse.json(
+        { error: 'An unknown error occurred' },
+        { status: 500 }
+      );
+    }
   }
 }

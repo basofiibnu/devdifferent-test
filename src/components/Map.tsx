@@ -63,7 +63,8 @@ export default function Map() {
         center={mapCenter}
         zoom={11}
       >
-        {properties?.length > 0 &&
+        {properties &&
+          properties?.length > 0 &&
           properties?.map((property, index) => (
             <Marker
               key={property?.id}
