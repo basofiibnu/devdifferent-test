@@ -17,7 +17,7 @@ export default function LoginPage() {
       password,
     });
     if (error) return alert('Login failed: ' + error.message);
-    router.push('/');
+    router.push('/auth/callback');
   };
 
   const handleGoogleLogin = async () => {

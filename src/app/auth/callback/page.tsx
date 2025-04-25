@@ -54,12 +54,12 @@ export default function AuthCallbackPage() {
           alert(
             'An error occurred while saving your account. Please try again.'
           );
-          router.push('/auth/signin'); // Redirect to the login page
+          router.push('/auth/signin');
           return;
         }
       }
 
-      router.push('/'); // Redirect to the home page after successful login
+      router.push('/dashboard');
     };
 
     handleOAuth();
