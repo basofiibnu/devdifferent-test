@@ -9,6 +9,7 @@ export default function PropertyForm({
 }: {
   property: any;
 }) {
+  console.log(property, 'propery');
   const router = useRouter();
   const [form, setForm] = useState({
     price: property?.price,
@@ -27,12 +28,29 @@ export default function PropertyForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const { data, error } = property
-      ? await supabase
-          .from('properties')
-          .update(form)
-          .eq('id', property.id)
-      : await supabase.from('properties').insert(form);
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      console.error('No user found!');
+      return;
+    }
+
+    const payload = {
+      ...form,
+      user_id: user.id,
+    };
+
+    console.log(payload, 'payload');
+
+    const { data, error } =
+      property.length > 0
+        ? await supabase
+            .from('properties')
+            .update(form)
+            .eq('id', property.id)
+        : await supabase.from('properties').insert([payload]);
 
     if (error) {
       console.log(error);

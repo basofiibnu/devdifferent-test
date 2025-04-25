@@ -1,3 +1,4 @@
+import Header from '@/components/Header';
 import Map from '@/components/Map';
 import PropertyForm from '@/components/PropertyForm';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
@@ -21,16 +22,13 @@ export default async function DashboardPage() {
     .select('*')
     .eq('user_id', session.user.id);
 
+  console.log(properties, 'properties');
+
   return (
     <div className="p-4">
-      <h1 className="text-xl font-semibold mb-4">Dashboard</h1>
+      <Header />
       <Map properties={properties || []} />
       <PropertyForm property={properties} />
-      <form action="/auth/signout" method="post">
-        <button className="mt-4 px-4 py-2 bg-red-500 text-white rounded">
-          Logout
-        </button>
-      </form>
     </div>
   );
 }
