@@ -59,7 +59,7 @@ export const PropertiesProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const [priceFilter, setPriceFilter] = useState<number | null>(null); // State to store the price filter
+  const [priceFilter, setPriceFilter] = useState<number | null>(null);
 
   const { data, error, isLoading, mutate } = useSWR(
     ['properties', priceFilter],

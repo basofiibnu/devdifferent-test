@@ -17,7 +17,6 @@ export default function PropertyOverlay({
 }: PropertyOverlayProps) {
   return (
     <div className="relative w-64 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg transition-transform transform hover:scale-105">
-      {/* Close Button */}
       <button
         className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
         onClick={onClose}

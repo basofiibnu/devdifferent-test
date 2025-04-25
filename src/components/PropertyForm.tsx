@@ -9,7 +9,6 @@ import Button from '@/components/global/Button';
 import { useState } from 'react';
 import { TProperty } from '../../types/property';
 
-// Define Zod schema for validation
 const propertySchema = z.object({
   price: z.number().min(1, 'Price must be greater than 0'),
   image_url: z.string().url('Must be a valid URL').optional(),
@@ -32,7 +31,7 @@ export default function PropertyForm({
   property: TProperty | null;
   onClose: () => void;
 }) {
-  const [useFileUpload, setUseFileUpload] = useState(false); // Toggle between URL and file upload
+  const [useFileUpload, setUseFileUpload] = useState(false);
   const [uploading, setUploading] = useState(false);
 
   const {
@@ -76,7 +75,7 @@ export default function PropertyForm({
         throw new Error(data.error || 'Failed to upload image');
       }
 
-      setValue('image_url', data.url); // Set the image URL in the form
+      setValue('image_url', data.url);
       alert('Image uploaded successfully!');
     } catch (error: unknown) {
       console.error(
@@ -112,14 +111,12 @@ export default function PropertyForm({
 
     let error;
     if (property) {
-      // Update existing property
       const { error: updateError } = await supabase
         .from('properties')
         .update(payload)
         .eq('id', property.id);
       error = updateError;
     } else {
-      // Insert new property
       const { error: insertError } = await supabase
         .from('properties')
         .insert([payload]);
@@ -134,7 +131,7 @@ export default function PropertyForm({
           ? 'Property updated successfully'
           : 'Property added successfully!'
       );
-      onClose(); // Close the modal
+      onClose();
     }
   };
 

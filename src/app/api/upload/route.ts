@@ -8,10 +8,10 @@ const supabase = createClient(
 
 export async function POST(req: Request) {
   try {
-    const formData = await req.formData(); // Parse the FormData body
-    const file = formData.get('file') as File; // Get the file from FormData
-    const fileName = formData.get('fileName') as string; // Get the fileName from FormData
-    const userId = formData.get('id') as string; // Get the fileName from FormData
+    const formData = await req.formData();
+    const file = formData.get('file') as File;
+    const fileName = formData.get('fileName') as string;
+    const userId = formData.get('id') as string;
 
     if (!file || !fileName) {
       return NextResponse.json(
@@ -20,13 +20,11 @@ export async function POST(req: Request) {
       );
     }
 
-    // Convert file to binary buffer
     const arrayBuffer = await file.arrayBuffer();
     const fileBuffer = Buffer.from(arrayBuffer);
     const path = `${userId}/${Date.now()}-${fileName}`;
-    // Upload file to Supabase Storage
     const { data, error } = await supabase.storage
-      .from('property-images') // Replace 'property-images' with your bucket name
+      .from('property-images')
       .upload(path, fileBuffer, {
         contentType: file.type || 'application/octet-stream',
       });
@@ -35,7 +33,6 @@ export async function POST(req: Request) {
       throw error;
     }
 
-    // Get the public URL of the uploaded file
     const { data: storageData } = supabase.storage
       .from('property-images')
       .getPublicUrl(data.path);

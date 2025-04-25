@@ -5,7 +5,6 @@ interface InputProps
   className?: string;
 }
 
-// Use `forwardRef` to pass the `ref` from react-hook-form
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ type, placeholder, name, className, ...rest }, ref) => {
     return (

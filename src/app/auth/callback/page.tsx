@@ -18,14 +18,13 @@ export default function AuthCallbackPage() {
           error
         );
         alert('Login canceled or failed. Please try again.');
-        router.push('/auth/signin'); // Redirect to the login page
+        router.push('/auth/signin');
         return;
       }
 
       console.log(sessionData, 'session in auth callback page');
       const user = sessionData.session.user;
 
-      // Try inserting to `users` table only if the user doesn't exist
       const { data: existing, error: existingError } = await supabase
         .from('users')
         .select('id')

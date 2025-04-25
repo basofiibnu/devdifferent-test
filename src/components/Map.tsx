@@ -15,7 +15,7 @@ import ConfirmationModal from './PropertyConfirmation';
 import { useProperties } from '@/context/PropertiesCtx';
 import { TProperty } from '../../types/property';
 
-const containerStyle = { width: '100%', height: '100%' }; // Full height and width
+const containerStyle = { width: '100%', height: '100%' };
 
 export default function Map() {
   const { properties, refreshProperties } = useProperties();
@@ -30,7 +30,6 @@ export default function Map() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
-  // Memoize the map center to prevent re-renders
   const mapCenter = useMemo(() => ({ lat: -6.2, lng: 106.8 }), []);
 
   if (!isLoaded) return <div>Loading map....</div>;
