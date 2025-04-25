@@ -13,6 +13,7 @@ import { supabase } from '@/lib/supabase-client';
 import PropertyOverlay from './PropertyOverlay';
 import ConfirmationModal from './PropertyConfirmation';
 import { useProperties } from '@/context/PropertiesCtx';
+import { TProperty } from '../../types/property';
 
 const containerStyle = { width: '100%', height: '100%' }; // Full height and width
 
@@ -24,9 +25,8 @@ export default function Map() {
   });
 
   const [hovered, setHovered] = useState<number | null>(null);
-  const [selectedProperty, setSelectedProperty] = useState<
-    any | null
-  >(null);
+  const [selectedProperty, setSelectedProperty] =
+    useState<TProperty | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
@@ -35,7 +35,7 @@ export default function Map() {
 
   if (!isLoaded) return <div>Loading map....</div>;
 
-  const handleOverlayClick = (property: any) => {
+  const handleOverlayClick = (property: TProperty) => {
     setSelectedProperty(property);
     setIsModalOpen(true);
   };
@@ -54,10 +54,10 @@ export default function Map() {
     setIsConfirmOpen(false);
   };
 
+  console.log(properties);
+
   return (
     <div className="relative h-screen">
-      {' '}
-      {/* Full height for the parent container */}
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={mapCenter}
@@ -68,14 +68,16 @@ export default function Map() {
             <Marker
               key={property?.id}
               position={{
-                lat: property?.latitude || 0,
-                lng: property?.longitude || 0,
+                lat: Number(property?.latitude || 0),
+                lng: Number(property?.longitude || 0),
               }}
-              onClick={() => setHovered(index)}
+              onMouseOver={() => setHovered(index)}
               label={{
-                text: `$${property?.price || ''}`,
+                text: `IDR ${
+                  property?.price.toLocaleString('ID') || ''
+                }`,
                 className:
-                  'bg-white px-2 py-1 rounded shadow text-sm',
+                  'bg-white px-2 py-1 rounded shadow text-lg',
               }}
             />
           ))}
@@ -83,8 +85,8 @@ export default function Map() {
         {properties && hovered !== null && (
           <OverlayView
             position={{
-              lat: properties[hovered]?.latitude || 0,
-              lng: properties[hovered]?.longitude || 0,
+              lat: Number(properties[hovered]?.latitude || 0),
+              lng: Number(properties[hovered]?.longitude || 0),
             }}
             mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
           >
@@ -100,7 +102,6 @@ export default function Map() {
           </OverlayView>
         )}
       </GoogleMap>
-      {/* Modal for PropertyForm */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -110,10 +111,13 @@ export default function Map() {
         </h2>
         <PropertyForm
           property={selectedProperty}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => {
+            refreshProperties();
+            setIsModalOpen(false);
+            setIsConfirmOpen(false);
+          }}
         />
       </Modal>
-      {/* Confirmation Modal for Deleting Property */}
       <ConfirmationModal
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}

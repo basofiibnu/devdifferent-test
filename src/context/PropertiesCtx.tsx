@@ -7,18 +7,10 @@ import {
   useState,
 } from 'react';
 import { supabase } from '@/lib/supabase-client';
-
-interface Property {
-  id: string;
-  price: number;
-  image_url: string;
-  latitude: number;
-  longitude: number;
-  user_id: string;
-}
+import { TProperty } from '../../types/property';
 
 interface PropertiesContextType {
-  properties: Property[];
+  properties: TProperty[];
   loading: boolean;
   error: string | null;
   refreshProperties: () => Promise<void>;
@@ -33,7 +25,7 @@ export const PropertiesProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [properties, setProperties] = useState<Property[]>([]);
+  const [properties, setProperties] = useState<TProperty[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

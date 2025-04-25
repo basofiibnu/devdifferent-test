@@ -1,8 +1,9 @@
 import React from 'react';
 import Button from './global/Button';
+import { TProperty } from '../../types/property';
 
 interface PropertyOverlayProps {
-  property: any;
+  property: TProperty;
   onClose: () => void;
   onUpdate: () => void;
   onDelete: () => void;
@@ -32,7 +33,9 @@ export default function PropertyOverlay({
       />
 
       <div className="text-sm text-gray-800 dark:text-gray-100 space-y-1">
-        <p className="font-bold text-lg">{`$${property?.price}`}</p>
+        <p className="font-bold text-lg">{`IDR ${property?.price.toLocaleString(
+          'ID'
+        )}`}</p>
         <p className="text-gray-600 dark:text-gray-400">{`Latitude: ${property?.latitude}`}</p>
         <p className="text-gray-600 dark:text-gray-400">{`Longitude: ${property?.longitude}`}</p>
       </div>
