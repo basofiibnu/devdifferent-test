@@ -1,6 +1,11 @@
 'use client';
 
-import { createContext, useContext, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+} from 'react';
 import useSWR from 'swr';
 import { supabase } from '@/lib/supabase-client';
 import { TProperty } from '../../types/property';
@@ -10,13 +15,14 @@ interface PropertiesContextType {
   loading: boolean;
   error: string | null;
   refreshProperties: () => void;
+  setPriceFilter: (price: number | null) => void;
 }
 
 const PropertiesContext = createContext<
   PropertiesContextType | undefined
 >(undefined);
 
-const fetchProperties = async () => {
+const fetchProperties = async (price: number | null) => {
   const {
     data: { user },
     error: userError,
@@ -30,10 +36,16 @@ const fetchProperties = async () => {
     throw new Error('User not authenticated.');
   }
 
-  const { data, error: propertiesError } = await supabase
+  let query = supabase
     .from('properties')
     .select('*')
     .eq('user_id', user.id);
+
+  if (price !== null) {
+    query = query.gte('price', price);
+  }
+
+  const { data, error: propertiesError } = await query;
 
   if (propertiesError) {
     throw new Error(propertiesError.message);
@@ -47,9 +59,11 @@ export const PropertiesProvider = ({
 }: {
   children: ReactNode;
 }) => {
+  const [priceFilter, setPriceFilter] = useState<number | null>(null); // State to store the price filter
+
   const { data, error, isLoading, mutate } = useSWR(
-    'properties',
-    fetchProperties
+    ['properties', priceFilter],
+    ([, price]) => fetchProperties(price)
   );
 
   return (
@@ -59,6 +73,7 @@ export const PropertiesProvider = ({
         loading: isLoading,
         error: error ? error.message : null,
         refreshProperties: mutate,
+        setPriceFilter,
       }}
     >
       {children}
