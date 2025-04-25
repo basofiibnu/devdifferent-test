@@ -1,21 +1,22 @@
 'use client';
 
-import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase-client';
 import { useState } from 'react';
+import Input from '@/components/global/Input';
+import Button from '@/components/global/Button';
 
 export default function PropertyForm({
   property,
+  onClose,
 }: {
   property: any;
+  onClose: () => void;
 }) {
-  console.log(property, 'propery');
-  const router = useRouter();
   const [form, setForm] = useState({
-    price: property?.price,
-    image_url: property?.image_url,
-    latitude: property?.latitude,
-    longitude: property?.longitude,
+    price: property?.price ?? '',
+    image_url: property?.image_url ?? '',
+    latitude: property?.latitude ?? '',
+    longitude: property?.longitude ?? '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +31,13 @@ export default function PropertyForm({
 
     const {
       data: { user },
+      error: userError,
     } = await supabase.auth.getUser();
+
+    if (userError) {
+      console.error('Error fetching user:', userError.message);
+      return;
+    }
 
     if (!user) {
       console.error('No user found!');
@@ -38,46 +45,69 @@ export default function PropertyForm({
     }
 
     const payload = {
-      ...form,
+      price: Number(form.price),
+      image_url: form.image_url,
+      latitude: Number(form.latitude),
+      longitude: Number(form.longitude),
       user_id: user.id,
     };
 
-    console.log(payload, 'payload');
-
-    const { data, error } =
-      property.length > 0
-        ? await supabase
-            .from('properties')
-            .update(form)
-            .eq('id', property.id)
-        : await supabase.from('properties').insert([payload]);
+    let error;
+    if (property) {
+      // Update existing property
+      const { error: updateError } = await supabase
+        .from('properties')
+        .update(payload)
+        .eq('id', property.id);
+      error = updateError;
+    } else {
+      // Insert new property
+      const { error: insertError } = await supabase
+        .from('properties')
+        .insert([payload]);
+      error = insertError;
+    }
 
     if (error) {
-      console.log(error);
+      console.error('Error saving property:', error.message);
     } else {
-      router.refresh();
+      alert(
+        property
+          ? 'Property updated successfully'
+          : 'Property added successfully!'
+      );
+      onClose(); // Close the modal
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 mb-8">
+    <form onSubmit={handleSubmit} className="space-y-4">
       {['price', 'image_url', 'latitude', 'longitude'].map(
         (field) => (
-          <input
+          <Input
             key={field}
-            type="text"
+            type={
+              field === 'price' ||
+              field === 'latitude' ||
+              field === 'longitude'
+                ? 'number'
+                : 'text'
+            }
             name={field}
-            placeholder={field}
+            placeholder={
+              field.charAt(0).toUpperCase() + field.slice(1)
+            }
             value={(form as any)[field]}
             onChange={handleChange}
-            className="border p-2 w-full rounded"
-            required
           />
         )
       )}
-      <button className="bg-blue-600 text-white px-4 py-2 rounded">
+      <Button
+        type="submit"
+        className="bg-blue-600 text-white hover:bg-blue-700 dark:hover:bg-blue-500"
+      >
         {property ? 'Update' : 'Create'} Property
-      </button>
+      </Button>
     </form>
   );
 }

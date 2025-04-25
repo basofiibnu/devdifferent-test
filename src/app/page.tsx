@@ -1,7 +1,8 @@
 'use client';
+
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabase-client';
 
 export default function HomePage() {
   const router = useRouter();
@@ -15,15 +16,14 @@ export default function HomePage() {
 
       if (error) {
         console.error('Error fetching session:', error);
-        router.push('/auth/signin'); // Redirect to sign-in page on error
+        router.push('/auth/signin');
         return;
       }
 
-      console.log(session);
       if (session) {
-        router.push('/dashboard'); // Redirect to dashboard if authenticated
+        router.push('/dashboard');
       } else {
-        router.push('/auth/signin'); // Redirect to sign-in page if not authenticated
+        router.push('/auth/signin');
       }
     };
 

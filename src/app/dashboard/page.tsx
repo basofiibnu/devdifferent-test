@@ -1,34 +1,40 @@
-import Header from '@/components/Header';
+'use client';
+
+import Header from '@/components/global/Header';
 import Map from '@/components/Map';
-import PropertyForm from '@/components/PropertyForm';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { supabase } from '@/lib/supabase-client';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
-export default async function DashboardPage() {
-  const supabase = createServerComponentClient({ cookies });
+export default function DashboardPage() {
+  const router = useRouter();
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  useEffect(() => {
+    const checkSession = async () => {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
 
-  if (!session) {
-    return (
-      <div className="p-4">Unauthorized. Please login First.</div>
-    );
-  }
+      if (error) {
+        router.push('/auth/signin');
+        return;
+      }
 
-  const { data: properties } = await supabase
-    .from('properties')
-    .select('*')
-    .eq('user_id', session.user.id);
+      if (session) {
+        router.push('/dashboard');
+      } else {
+        router.push('/auth/signin');
+      }
+    };
 
-  console.log(properties, 'properties');
+    checkSession();
+  }, [router]);
 
   return (
-    <div className="p-4">
+    <div>
       <Header />
-      <Map properties={properties || []} />
-      <PropertyForm property={properties} />
+      <Map />
     </div>
   );
 }

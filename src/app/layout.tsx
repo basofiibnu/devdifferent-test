@@ -4,6 +4,7 @@ import './globals.css';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { SupabaseProvider } from '@/lib/supabase-provider';
+import { PropertiesProvider } from '@/context/PropertiesCtx';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -32,10 +33,10 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#ffffff] text-[#171717] dark:bg-[#0a0a0a] dark:text-[#ededed]`}
       >
         <SupabaseProvider session={session}>
-          {children}
+          <PropertiesProvider>{children}</PropertiesProvider>
         </SupabaseProvider>
       </body>
     </html>

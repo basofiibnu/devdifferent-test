@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase-client';
+import Input from '@/components/global/Input';
+import Button from '@/components/global/Button';
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
@@ -27,7 +29,7 @@ export default function SignupPage() {
     }
 
     alert('Check your email for confirmation!');
-    router.push('/login');
+    router.push('/');
   };
 
   return (
@@ -40,31 +42,30 @@ export default function SignupPage() {
           Sign up to get started
         </p>
         <div className="space-y-4">
-          <input
-            className="border border-gray-300 dark:border-gray-700 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-100"
-            placeholder="Full Name"
+          <Input
+            type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            placeholder="Full Name"
           />
-          <input
-            className="border border-gray-300 dark:border-gray-700 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-100"
-            placeholder="Email"
+          <Input
+            type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
           />
-          <input
-            className="border border-gray-300 dark:border-gray-700 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-100"
+          <Input
             type="password"
-            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
           />
-          <button
+          <Button
             onClick={handleSignup}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-500 transition"
+            className="bg-blue-600 text-white hover:bg-blue-700 dark:hover:bg-blue-500"
           >
             Create Account
-          </button>
+          </Button>
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-6">
           Already have an account?{' '}
