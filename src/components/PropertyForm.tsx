@@ -81,33 +81,52 @@ export default function PropertyForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6 bg-white dark:bg-gray-800 py-6"
+    >
       {['price', 'image_url', 'latitude', 'longitude'].map(
         (field) => (
-          <Input
-            key={field}
-            type={
-              field === 'price' ||
-              field === 'latitude' ||
-              field === 'longitude'
-                ? 'number'
-                : 'text'
-            }
-            name={field}
-            placeholder={
-              field.charAt(0).toUpperCase() + field.slice(1)
-            }
-            value={(form as any)[field]}
-            onChange={handleChange}
-          />
+          <div key={field} className="space-y-1">
+            <label
+              htmlFor={field}
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              {field.charAt(0).toUpperCase() + field.slice(1)}
+            </label>
+            <Input
+              id={field}
+              type={
+                field === 'price' ||
+                field === 'latitude' ||
+                field === 'longitude'
+                  ? 'number'
+                  : 'text'
+              }
+              name={field}
+              placeholder={`Enter ${field}`}
+              value={(form as any)[field]}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+            />
+          </div>
         )
       )}
-      <Button
-        type="submit"
-        className="bg-blue-600 text-white hover:bg-blue-700 dark:hover:bg-blue-500"
-      >
-        {property ? 'Update' : 'Create'} Property
-      </Button>
+      <div className="flex justify-end space-x-4">
+        <Button
+          type="button"
+          onClick={onClose}
+          className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600"
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+        >
+          {property ? 'Update' : 'Create'}
+        </Button>
+      </div>
     </form>
   );
 }

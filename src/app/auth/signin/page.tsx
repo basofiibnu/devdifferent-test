@@ -31,9 +31,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-      <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-lg p-8 w-full max-w-md">
+        <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
           Welcome Back
         </h1>
         <p className="text-sm text-gray-600 dark:text-gray-400 text-center mb-6">
@@ -45,19 +45,24 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           />
+
           <Input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           />
+
           <Button
             onClick={handleEmailLogin}
-            className="bg-blue-600 text-white hover:bg-blue-700 dark:hover:bg-blue-500"
+            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-500 transition"
           >
             Login with Email
           </Button>
+
           <div className="flex items-center justify-between">
             <hr className="w-full border-gray-300 dark:border-gray-700" />
             <span className="text-sm text-gray-500 dark:text-gray-400 px-2">
@@ -65,9 +70,10 @@ export default function LoginPage() {
             </span>
             <hr className="w-full border-gray-300 dark:border-gray-700" />
           </div>
+
           <Button
             onClick={handleGoogleLogin}
-            className="bg-red-500 text-white hover:bg-red-600 dark:hover:bg-red-400 flex items-center justify-center space-x-2"
+            className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 dark:hover:bg-red-400 flex items-center justify-center space-x-2 transition"
           >
             <svg
               className="w-5 h-5"
@@ -95,8 +101,9 @@ export default function LoginPage() {
             <span>Login with Google</span>
           </Button>
         </div>
+
         <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-6">
-          Don't have an account?{' '}
+          Dont have an account?{' '}
           <a
             href="/auth/signup"
             className="text-blue-600 dark:text-blue-400 hover:underline"

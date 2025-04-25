@@ -14,11 +14,7 @@ export default function Button({
   type = 'button',
 }: ButtonProps) {
   return (
-    <button
-      onClick={onClick}
-      className={`w-full py-3 rounded-lg transition ${className}`}
-      type={type}
-    >
+    <button onClick={onClick} className={className} type={type}>
       {children}
     </button>
   );

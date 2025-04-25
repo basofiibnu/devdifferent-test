@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from './global/Button';
 
 interface PropertyOverlayProps {
   property: any;
@@ -14,36 +15,41 @@ export default function PropertyOverlay({
   onDelete,
 }: PropertyOverlayProps) {
   return (
-    <div className="w-min bg-white dark:bg-black p-4 rounded shadow cursor-pointer transition-transform transform hover:scale-105">
+    <div className="relative w-64 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+      {/* Close Button */}
       <button
-        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
         onClick={onClose}
+        aria-label="Close"
       >
         ✕
       </button>
+
       <img
-        src={property?.image_url ?? ''}
-        alt="Preview"
-        className="w-40 h-24 rounded mb-2"
+        src={property?.image_url ?? 'https://via.placeholder.com/150'}
+        alt="Property Preview"
+        className="w-full h-32 object-cover rounded-lg mb-4"
       />
-      <div className="text-sm text-gray-800 dark:text-gray-100 mb-2">
-        <p className="font-bold">{`$${property?.price}`}</p>
-        <p>{`Lat: ${property?.latitude}`}</p>
-        <p>{`Lng: ${property?.longitude}`}</p>
+
+      <div className="text-sm text-gray-800 dark:text-gray-100 space-y-1">
+        <p className="font-bold text-lg">{`$${property?.price}`}</p>
+        <p className="text-gray-600 dark:text-gray-400">{`Latitude: ${property?.latitude}`}</p>
+        <p className="text-gray-600 dark:text-gray-400">{`Longitude: ${property?.longitude}`}</p>
       </div>
-      <div className="flex space-x-2">
-        <button
+
+      <div className="flex justify-between mt-4">
+        <Button
           onClick={onUpdate}
-          className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 dark:hover:bg-blue-500"
+          className="flex-1 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition"
         >
           Update
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={onDelete}
-          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 dark:hover:bg-red-500"
+          className="flex-1 bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 transition ml-2"
         >
           Delete
-        </button>
+        </Button>
       </div>
     </div>
   );

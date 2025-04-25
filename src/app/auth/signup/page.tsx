@@ -20,7 +20,6 @@ export default function SignupPage() {
 
     if (error) return alert(error.message);
 
-    // Save user info into our `users` table
     const userId = data.user?.id;
     if (userId) {
       await supabase
@@ -33,9 +32,9 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-      <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-lg p-8 w-full max-w-md">
+        <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
           Create an Account
         </h1>
         <p className="text-sm text-gray-600 dark:text-gray-400 text-center mb-6">
@@ -47,26 +46,34 @@ export default function SignupPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Full Name"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           />
+
           <Input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           />
+
           <Input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           />
+
           <Button
             onClick={handleSignup}
-            className="bg-blue-600 text-white hover:bg-blue-700 dark:hover:bg-blue-500"
+            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-500 transition"
           >
             Create Account
           </Button>
         </div>
+
+        {/* Sign In Link */}
         <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-6">
           Already have an account?{' '}
           <a

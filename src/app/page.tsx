@@ -30,5 +30,5 @@ export default function HomePage() {
     checkSession();
   }, [router]);
 
-  return <div className="p-4">Redirecting...</div>;
+  return <p className="text-center mt-8">Redirecting...</p>;
 }
