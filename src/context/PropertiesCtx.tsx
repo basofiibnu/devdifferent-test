@@ -1,80 +1,65 @@
 'use client';
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, useContext, ReactNode } from 'react';
+import useSWR from 'swr';
 import { supabase } from '@/lib/supabase-client';
 import { TProperty } from '../../types/property';
 
 interface PropertiesContextType {
-  properties: TProperty[];
+  properties: TProperty[] | undefined;
   loading: boolean;
   error: string | null;
-  refreshProperties: () => Promise<void>;
+  refreshProperties: () => void;
 }
 
 const PropertiesContext = createContext<
   PropertiesContextType | undefined
 >(undefined);
 
+const fetchProperties = async () => {
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError) {
+    throw new Error('Failed to fetch user session.');
+  }
+
+  if (!user) {
+    throw new Error('User not authenticated.');
+  }
+
+  const { data, error: propertiesError } = await supabase
+    .from('properties')
+    .select('*')
+    .eq('user_id', user.id);
+
+  if (propertiesError) {
+    throw new Error(propertiesError.message);
+  }
+
+  return data || [];
+};
+
 export const PropertiesProvider = ({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) => {
-  const [properties, setProperties] = useState<TProperty[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchProperties = async () => {
-    setLoading(true);
-    setError(null);
-
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (userError) {
-      setError('Failed to fetch user session.');
-      setLoading(false);
-      return;
-    }
-
-    if (!user) {
-      setError('User not authenticated.');
-      setLoading(false);
-      return;
-    }
-
-    const { data, error: propertiesError } = await supabase
-      .from('properties')
-      .select('*')
-      .eq('user_id', user.id);
-
-    if (propertiesError) {
-      setError(propertiesError.message);
-    } else {
-      setProperties(data || []);
-    }
-
-    setLoading(false);
-  };
-
-  const refreshProperties = async () => {
-    await fetchProperties();
-  };
-
-  useEffect(() => {
-    fetchProperties();
-  }, []);
+  const { data, error, isLoading, mutate } = useSWR(
+    'properties',
+    fetchProperties
+  );
 
   return (
     <PropertiesContext.Provider
-      value={{ properties, loading, error, refreshProperties }}
+      value={{
+        properties: data,
+        loading: isLoading,
+        error: error ? error.message : null,
+        refreshProperties: mutate,
+      }}
     >
       {children}
     </PropertiesContext.Provider>
