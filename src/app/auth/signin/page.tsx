@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Input from '@/components/global/Input';
 import Button from '@/components/global/Button';
 import { supabase } from '@/lib/supabase-client';
@@ -9,7 +8,6 @@ import { supabase } from '@/lib/supabase-client';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter();
 
   const handleEmailLogin = async () => {
     const { error } = await supabase.auth.signInWithPassword({
@@ -17,7 +15,7 @@ export default function LoginPage() {
       password,
     });
     if (error) return alert('Login failed: ' + error.message);
-    router.push('/auth/callback');
+    window.location.href = '/';
   };
 
   const handleGoogleLogin = async () => {
@@ -48,6 +46,7 @@ export default function LoginPage() {
             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           />
 
+          {/* Password Input */}
           <Input
             type="password"
             value={password}

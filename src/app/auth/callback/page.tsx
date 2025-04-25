@@ -22,6 +22,7 @@ export default function AuthCallbackPage() {
         return;
       }
 
+      console.log(sessionData, 'session in auth callback page');
       const user = sessionData.session.user;
 
       // Try inserting to `users` table only if the user doesn't exist
