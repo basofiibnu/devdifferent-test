@@ -19,6 +19,7 @@ export default function HomePage() {
         return;
       }
 
+      console.log(session);
       if (session) {
         router.push('/dashboard'); // Redirect to dashboard if authenticated
       } else {

@@ -1,6 +1,6 @@
 'use client';
 
-import { supabase } from '@/lib/supabase-browser';
+import { supabase } from '@/lib/supabase';
 import React from 'react';
 
 const Header = () => {

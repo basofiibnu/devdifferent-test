@@ -4,7 +4,8 @@ import {
   SessionContextProvider,
   Session,
 } from '@supabase/auth-helpers-react';
-import { supabase } from './supabase-browser';
+import { useState } from 'react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export function SupabaseProvider({
   children,
@@ -13,6 +14,7 @@ export function SupabaseProvider({
   children: React.ReactNode;
   session: Session | null;
 }>) {
+  const [supabase] = useState(() => createClientComponentClient());
   return (
     <SessionContextProvider
       supabaseClient={supabase}
