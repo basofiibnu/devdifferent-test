@@ -33,6 +33,7 @@ export default function PropertyForm({
 }) {
   const [useFileUpload, setUseFileUpload] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const {
     register,
@@ -89,6 +90,8 @@ export default function PropertyForm({
   };
 
   const onSubmit = async (data: PropertyFormValues) => {
+    setSubmitting(true);
+
     const {
       data: { user },
       error: userError,
@@ -96,11 +99,13 @@ export default function PropertyForm({
 
     if (userError) {
       console.error('Error fetching user:', userError.message);
+      setSubmitting(false);
       return;
     }
 
     if (!user) {
       console.error('No user found!');
+      setSubmitting(false);
       return;
     }
 
@@ -133,12 +138,18 @@ export default function PropertyForm({
       );
       onClose();
     }
+
+    setSubmitting(false);
   };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 bg-white dark:bg-gray-800 py-6 rounded-lg shadow-lg"
+      className={`space-y-6 bg-white dark:bg-gray-800 py-6 rounded-lg shadow-lg ${
+        submitting || uploading
+          ? 'opacity-50 pointer-events-none'
+          : ''
+      }`}
     >
       {['price', 'latitude', 'longitude'].map((field) => (
         <div key={field} className="space-y-1">
@@ -179,7 +190,6 @@ export default function PropertyForm({
         </div>
       ))}
 
-      {/* Image Upload Section */}
       <div className="space-y-1">
         <div className="flex items-center justify-between w-full mb-3">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -233,16 +243,19 @@ export default function PropertyForm({
         <Button
           type="button"
           onClick={onClose}
+          disabled={submitting || uploading}
           className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600"
         >
           Cancel
         </Button>
         <Button
           type="submit"
-          disabled={uploading}
+          disabled={submitting || uploading}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
         >
-          {uploading
+          {submitting
+            ? 'Submitting...'
+            : uploading
             ? 'Uploading...'
             : property
             ? 'Update'

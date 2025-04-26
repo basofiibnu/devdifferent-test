@@ -17,7 +17,7 @@ import { TProperty } from '../../types/property';
 
 const containerStyle = { width: '100%', height: '100%' };
 
-export default function Map() {
+export default function MapComponent() {
   const { properties, refreshProperties } = useProperties();
 
   const { isLoaded } = useLoadScript({
@@ -29,6 +29,7 @@ export default function Map() {
     useState<TProperty | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const mapCenter = useMemo(() => ({ lat: -6.2, lng: 106.8 }), []);
 
@@ -40,20 +41,61 @@ export default function Map() {
   };
 
   const handleDelete = async (propertyId: string) => {
-    const { error } = await supabase
-      .from('properties')
-      .delete()
-      .eq('id', propertyId);
-    if (error) {
-      console.error('Error deleting property:', error);
-    } else {
-      alert('Property deleted successfully!');
-    }
-    refreshProperties();
-    setIsConfirmOpen(false);
-  };
+    setDeleting(true);
+    try {
+      const { data: property, error: fetchError } = await supabase
+        .from('properties')
+        .select('user_id, image_url')
+        .eq('id', propertyId)
+        .single();
 
-  console.log(properties);
+      if (fetchError) {
+        console.error('Error fetching property:', fetchError);
+        alert('Failed to fetch property details.');
+        setDeleting(false);
+        return;
+      }
+
+      if (property?.image_url) {
+        const folderName = property.image_url.indexOf(
+          property.user_id
+        );
+        const imagePath = property.image_url.substring(folderName);
+        console.log(imagePath);
+        const { error: storageError } = await supabase.storage
+          .from('property-images')
+          .remove([imagePath]);
+
+        if (storageError) {
+          console.error('Error deleting image:', storageError);
+          alert('Failed to delete property image.');
+          setDeleting(false);
+          return;
+        }
+      }
+
+      const { error: deleteError } = await supabase
+        .from('properties')
+        .delete()
+        .eq('id', propertyId);
+
+      if (deleteError) {
+        console.error('Error deleting property:', deleteError);
+        alert('Failed to delete property.');
+        setDeleting(false);
+        return;
+      }
+
+      alert('Property and associated image deleted successfully!');
+      refreshProperties();
+      setIsConfirmOpen(false);
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      alert('An unexpected error occurred.');
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   return (
     <div className="relative h-screen">
@@ -126,7 +168,12 @@ export default function Map() {
             handleDelete(selectedProperty.id);
           }
         }}
-        message="Are you sure you want to delete this property?"
+        message={
+          deleting
+            ? 'Deleting property, please wait...'
+            : 'Are you sure you want to delete this property?'
+        }
+        disableActions={deleting} // Disable buttons while deleting
       />
     </div>
   );
