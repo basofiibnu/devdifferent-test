@@ -1,17 +1,21 @@
-import { createClient } from '@supabase/supabase-js';
+import { supabaseServer } from '@/lib/supabase-server';
 import { NextResponse } from 'next/server';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export async function POST(req: Request) {
   try {
+    const supabase = await supabaseServer();
+    const { data: sessionData } = await supabase.auth.getUser();
+
+    if (!sessionData) {
+      return NextResponse.json(
+        { error: 'User not authenticated' },
+        { status: 401 }
+      );
+    }
+
     const formData = await req.formData();
     const file = formData.get('file') as File;
     const fileName = formData.get('fileName') as string;
-    const userId = formData.get('id') as string;
 
     if (!file || !fileName) {
       return NextResponse.json(
@@ -22,7 +26,8 @@ export async function POST(req: Request) {
 
     const arrayBuffer = await file.arrayBuffer();
     const fileBuffer = Buffer.from(arrayBuffer);
-    const path = `${userId}/${Date.now()}-${fileName}`;
+    const path = `${sessionData.user?.id}/${Date.now()}-${fileName}`;
+
     const { data, error } = await supabase.storage
       .from('property-images')
       .upload(path, fileBuffer, {
